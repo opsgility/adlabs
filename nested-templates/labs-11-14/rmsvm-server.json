@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "MSVM1",
+      "defaultValue": "RMSVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
@@ -64,16 +64,16 @@
     "scriptFolder": ".",
     "DomainJoinscriptFileName": "domain-join.ps1",
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
-    "MABSServerVM1ImagePublisher": "MicrosoftWindowsServer",
-    "MABSServerVM1ImageOffer": "WindowsServer",
-    "MABSServerVM1OSDiskName": "MABSServerVM1OSDisk",
-    "MABSServerVM1VmSize": "Standard_DS2_v2",
-    "MABSServerVM1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
-    "MABSServerVM1SubnetRef": "[concat(variables('MABSServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
-    "MABSServerVM1StorageAccountContainerName": "vhds",
-    "MABSServerVM1NicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "MABSDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
-    "MABSServerVm1-IPName": "MABSServerVm1-IP"
+    "RMSVMImagePublisher": "MicrosoftWindowsServer",
+    "RMSVMImageOffer": "WindowsServer",
+    "RMSVMOSDiskName": "RMSVMOSDisk",
+    "RMSVMVmSize": "Standard_DS2_v2",
+    "RMSVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
+    "RMSVMSubnetRef": "[concat(variables('RMSVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
+    "RMSVMStorageAccountContainerName": "vhds",
+    "RMSVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
+    "RMSVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "RMSVM-IPName": "RMSVM-IP"
   },
   "resources": [
     {
@@ -91,15 +91,15 @@
       "kind": "Storage"
     },
     {
-      "name": "[variables('MABSServerVM1NicName')]",
+      "name": "[variables('RMSVMNicName')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('MABSServerVm1-IPName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('RMSVM-IPName'))]"
       ],
       "tags": {
-        "displayName": "MABSServerVM1Nic"
+        "displayName": "RMSVMNic"
       },
       "properties": {
         "ipConfigurations": [
@@ -108,10 +108,10 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('MABSServerVM1SubnetRef')]"
+                "id": "[variables('RMSVMSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('MABSServerVm1-IPName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('RMSVM-IPName'))]"
               }
             }
           }
@@ -125,14 +125,14 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('MABSServerVM1NicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('RMSVMNicName'))]"
       ],
       "tags": {
-        "displayName": "MABSServerVM1"
+        "displayName": "RMSVM"
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('MABSServerVM1VmSize')]"
+          "vmSize": "[variables('RMSVMVmSize')]"
         },
         "osProfile": {
           "computerName": "[parameters('DomainJoinedVMName')]",
@@ -141,15 +141,15 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('MABSServerVM1ImagePublisher')]",
-            "offer": "[variables('MABSServerVM1ImageOffer')]",
+            "publisher": "[variables('RMSVMImagePublisher')]",
+            "offer": "[variables('RMSVMImageOffer')]",
             "sku": "[parameters('DomainJoinedVMWindowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
-            "name": "MABSServerVM1OSDisk",
+            "name": "RMSVMOSDisk",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('MABSServerVM1StorageAccountContainerName'), '/', variables('MABSServerVM1OSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('RMSVMStorageAccountContainerName'), '/', variables('RMSVMOSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -159,7 +159,7 @@
               "name": "datadisk1",
               "diskSizeGB": "1023",
               "lun": 0,
-              "vhd": { "uri": "[variables('MABSDISK1')]" },
+              "vhd": { "uri": "[variables('RMSVMDISK1')]" },
               "createOption": "Empty"
             }
           ]
@@ -167,7 +167,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('MABSServerVM1NicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('RMSVMNicName'))]"
             }
           ]
         }
@@ -200,13 +200,13 @@
       ]
     },
     {
-      "name": "[variables('MABSServerVm1-IPName')]",
+      "name": "[variables('RMSVM-IPName')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [ ],
       "tags": {
-        "displayName": "MABSServerVm1-IP"
+        "displayName": "RMSVM-IP"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic"

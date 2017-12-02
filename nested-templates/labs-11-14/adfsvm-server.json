@@ -72,7 +72,7 @@
     "ADFSVMSubnetRef": "[concat(variables('ADFSVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "ADFSVMStorageAccountContainerName": "vhds",
     "ADFSVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "MABSDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "ADFSVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
     "ADFSVM-IPName": "ADFSVM-IP"
   },
   "resources": [
@@ -159,7 +159,7 @@
               "name": "datadisk1",
               "diskSizeGB": "1023",
               "lun": 0,
-              "vhd": { "uri": "[variables('MABSDISK1')]" },
+              "vhd": { "uri": "[variables('ADFSVMDISK1')]" },
               "createOption": "Empty"
             }
           ]
