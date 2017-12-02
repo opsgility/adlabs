@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "AFDFSVM",
+      "defaultValue": "BDCVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {

@@ -30,7 +30,7 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsdemo.local",
+      "defaultValue": "opsaaddemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
@@ -48,7 +48,7 @@
         "2008-R2-SP1",
         "2012-Datacenter",
         "2012-R2-Datacenter",
-	      "2016-Datacenter"
+        "2016-Datacenter"
       ]
     }
   },
@@ -76,7 +76,7 @@
     "VM1scriptParameters": "[concat(' -domain ', parameters('domainName'), ' -password ', parameters('adminPassword'))]",
     "DomainJoinscriptFileName": "domain-join.ps1",
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
-      "PDCVMipName": "PDCVMip"
+    "PDCVMipName": "PDCVMip"
   },
   "resources": [
     {
@@ -99,7 +99,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
-          "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
       ],
       "tags": {
         "displayName": "PDCVMNic"
@@ -113,9 +113,9 @@
               "subnet": {
                 "id": "[variables('PDCVMSubnetRef')]"
               },
-                "publicIPAddress": {
-                    "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
-                }
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
+              }
             }
           }
         ]
@@ -193,19 +193,19 @@
         }
       ]
     },
-      {
-          "name": "[variables('PDCVMipName')]",
-          "type": "Microsoft.Network/publicIPAddresses",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
-          "dependsOn": [ ],
-          "tags": {
-              "displayName": "PDCVMip"
-          },
-          "properties": {
-              "publicIPAllocationMethod": "Dynamic"
-          }
+    {
+      "name": "[variables('PDCVMipName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "PDCVMip"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
       }
+    }
   ],
-    "outputs": {}
-  }
+  "outputs": {}
+}
