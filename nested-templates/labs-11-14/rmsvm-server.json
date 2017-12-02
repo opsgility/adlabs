@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "RMSVM",
+      "defaultValue": "AFDFSVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
@@ -204,7 +204,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "RMSVM-IP"
       },
@@ -213,5 +213,5 @@
       }
     }
   ],
-    "outputs": {}
-  }
+  "outputs": {}
+}

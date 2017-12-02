@@ -25,7 +25,7 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsdemo.local",
+      "defaultValue": "opsaaddemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "SUBCAVM",
+      "defaultValue": "AFDFSVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
@@ -64,16 +64,16 @@
     "scriptFolder": ".",
     "DomainJoinscriptFileName": "domain-join.ps1",
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
-    "SUBCAServerVM1ImagePublisher": "MicrosoftWindowsServer",
-    "SUBCAServerVM1ImageOffer": "WindowsServer",
-    "SUBCAServerVM1OSDiskName": "SUBCAServerVM1OSDisk",
-    "SUBCAServerVM1VmSize": "Standard_DS2_v2",
-    "SUBCAServerVM1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
-    "SUBCAServerVM1SubnetRef": "[concat(variables('SUBCAServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
-    "SUBCAServerVM1StorageAccountContainerName": "vhds",
-    "SUBCAServerVM1NicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "SUBCADISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
-    "SUBCAServerVm1-IPName": "SUBCAServerVm1-IP"
+    "SUBCAVMImagePublisher": "MicrosoftWindowsServer",
+    "SUBCAVMImageOffer": "WindowsServer",
+    "SUBCAVMOSDiskName": "SUBCAVMOSDisk",
+    "SUBCAVMVmSize": "Standard_DS2_v2",
+    "SUBCAVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
+    "SUBCAVMSubnetRef": "[concat(variables('SUBCAVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
+    "SUBCAVMStorageAccountContainerName": "vhds",
+    "SUBCAVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
+    "SUBCAVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "SUBCAVM-IPName": "SUBCAVM-IP"
   },
   "resources": [
     {
@@ -91,15 +91,15 @@
       "kind": "Storage"
     },
     {
-      "name": "[variables('SUBCAServerVM1NicName')]",
+      "name": "[variables('SUBCAVMNicName')]",
       "type": "Microsoft.Network/networkInterfaces",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('SUBCAServerVm1-IPName'))]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('SUBCAVM-IPName'))]"
       ],
       "tags": {
-        "displayName": "SUBCAServerVM1Nic"
+        "displayName": "SUBCAVMNic"
       },
       "properties": {
         "ipConfigurations": [
@@ -108,10 +108,10 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('SUBCAServerVM1SubnetRef')]"
+                "id": "[variables('SUBCAVMSubnetRef')]"
               },
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('SUBCAServerVm1-IPName'))]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('SUBCAVM-IPName'))]"
               }
             }
           }
@@ -125,14 +125,14 @@
       "apiVersion": "2015-06-15",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces', variables('SUBCAServerVM1NicName'))]"
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('SUBCAVMNicName'))]"
       ],
       "tags": {
-        "displayName": "SUBCAServerVM1"
+        "displayName": "SUBCAVM"
       },
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[variables('SUBCAServerVM1VmSize')]"
+          "vmSize": "[variables('SUBCAVMVmSize')]"
         },
         "osProfile": {
           "computerName": "[parameters('DomainJoinedVMName')]",
@@ -141,15 +141,15 @@
         },
         "storageProfile": {
           "imageReference": {
-            "publisher": "[variables('SUBCAServerVM1ImagePublisher')]",
-            "offer": "[variables('SUBCAServerVM1ImageOffer')]",
+            "publisher": "[variables('SUBCAVMImagePublisher')]",
+            "offer": "[variables('SUBCAVMImageOffer')]",
             "sku": "[parameters('DomainJoinedVMWindowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
-            "name": "SUBCAServerVM1OSDisk",
+            "name": "SUBCAVMOSDisk",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('SUBCAServerVM1StorageAccountContainerName'), '/', variables('SUBCAServerVM1OSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('SUBCAVMStorageAccountContainerName'), '/', variables('SUBCAVMOSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -159,7 +159,7 @@
               "name": "datadisk1",
               "diskSizeGB": "1023",
               "lun": 0,
-              "vhd": { "uri": "[variables('SUBCADISK1')]" },
+              "vhd": { "uri": "[variables('SUBCAVMDISK1')]" },
               "createOption": "Empty"
             }
           ]
@@ -167,7 +167,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SUBCAServerVM1NicName'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('SUBCAVMNicName'))]"
             }
           ]
         }
@@ -200,18 +200,18 @@
       ]
     },
     {
-      "name": "[variables('SUBCAServerVm1-IPName')]",
+      "name": "[variables('SUBCAVM-IPName')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
-        "displayName": "SUBCAServerVm1-IP"
+        "displayName": "SUBCAVM-IP"
       },
       "properties": {
         "publicIPAllocationMethod": "Dynamic"
       }
     }
   ],
-    "outputs": {}
-  }
+  "outputs": {}
+}

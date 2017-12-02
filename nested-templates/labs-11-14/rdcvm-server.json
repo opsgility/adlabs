@@ -25,7 +25,7 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsdemo.local",
+      "defaultValue": "opsaaddemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "RDCVM",
+      "defaultValue": "AFDFSVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
@@ -204,7 +204,7 @@
       "type": "Microsoft.Network/publicIPAddresses",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-30",
-      "dependsOn": [ ],
+      "dependsOn": [],
       "tags": {
         "displayName": "RDCVM-IP"
       },
@@ -213,5 +213,5 @@
       }
     }
   ],
-    "outputs": {}
-  }
+  "outputs": {}
+}
