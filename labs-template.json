@@ -18,12 +18,12 @@
     },
     "ADVMName": {
       "type": "string",
-      "defaultValue": "OPSADSRV",
+      "defaultValue": "PDCVM",
       "minLength": 1
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsaaddemo.local",
+      "defaultValue": "opsdemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
@@ -44,7 +44,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "MSVM1",
+      "defaultValue": "PDCVM",
       "minLength": 1
     }
   },
@@ -52,7 +52,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployActiveDirectory",
+      "name": "DeployPrimaryActiveDirectory",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNET"
@@ -93,7 +93,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeployADFS",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -125,7 +125,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeploySecondaryActiveDirectory",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -157,7 +157,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeployRemoteActiveDirectory",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -189,7 +189,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeployRightsManagement",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -221,7 +221,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeployPrimaryCertificateAuthority",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -253,7 +253,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeploySubordinateCertificateAuthority",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -285,7 +285,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeployClient",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNetWithDNS"
@@ -320,7 +320,7 @@
       "name": "VNetWithDNS",
       "apiVersion": "2016-02-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DeployActiveDirectory"
+        "Microsoft.Resources/deployments/DeployPrimaryActiveDirectory"
       ],
       "properties": {
         "mode": "Incremental",
