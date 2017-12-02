@@ -72,7 +72,7 @@
     "SUBCAVMSubnetRef": "[concat(variables('SUBCAVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "SUBCAVMStorageAccountContainerName": "vhds",
     "SUBCAVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "SUBCAVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "SUBCAVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','SUBCAVMdataDisk1.vhd')]",
     "SUBCAVM-IPName": "SUBCAVM-IP"
   },
   "resources": [
@@ -156,7 +156,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "SUBCAVMdataDisk1",
               "diskSizeGB": "1023",
               "lun": 0,
               "vhd": { "uri": "[variables('SUBCAVMDISK1')]" },

@@ -77,7 +77,7 @@
     "CLIENTVMSubnetRef": "[concat(variables('CLIENTVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "CLIENTVMStorageAccountContainerName": "vhds",
     "CLIENTVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "CLIENTVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "CLIENTVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','CLIENTVMdataDisk1.vhd')]",
     "CLIENTVM-IPName": "CLIENTVM-IP"
   },
   "resources": [
@@ -161,7 +161,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "CLIENTVMdataDisk1",
               "diskSizeGB": "1023",
               "lun": 0,
               "vhd": { "uri": "[variables('CLIENTVMDISK1')]" },

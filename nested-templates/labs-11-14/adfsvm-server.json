@@ -38,7 +38,7 @@
     },
     "DomainJoinedVMName": {
       "type": "string",
-      "defaultValue": "AFDFSVM",
+      "defaultValue": "ADFSVM",
       "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
@@ -72,7 +72,7 @@
     "ADFSVMSubnetRef": "[concat(variables('ADFSVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "ADFSVMStorageAccountContainerName": "vhds",
     "ADFSVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "ADFSVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "ADFSVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','ADFSVMdataDisk1.vhd')]",
     "ADFSVM-IPName": "ADFSVM-IP"
   },
   "resources": [
@@ -156,7 +156,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "ADFSVMdataDisk1",
               "diskSizeGB": "1023",
               "lun": 0,
               "vhd": { "uri": "[variables('ADFSVMDISK1')]" },
