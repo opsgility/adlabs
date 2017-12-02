@@ -1,0 +1,10 @@
+{
+  "version": "0.2.1",
+  "tasks": [
+    {
+      "taskName": "task-labs-11-14",
+      "appliesTo": "nested-templates/labs-11-14/",
+      "type": "launch"
+    }
+  ]
+}
