@@ -72,7 +72,7 @@
       "defaultValue": "SUBCAVM",
       "minLength": 1
     },
-    "DomainJoineCLIENTVMName": {
+    "DomainJoinedCLIENTVMName": {
       "type": "string",
       "defaultValue": "CLIENTVM",
       "minLength": 1
@@ -82,7 +82,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployActiveDirectory",
+      "name": "DeployPrimaryActiveDirectory",
       "apiVersion": "2016-02-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/VNET"
@@ -100,10 +100,10 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "domainName":{
+          "domainName": {
             "value": "[parameters('domainName')]"
           },
-          "ADInstallscriptUrl":{
+          "ADInstallscriptUrl": {
             "value": "[parameters('ADInstallscriptUrl')]"
           }
         }
@@ -123,10 +123,11 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
+      "name": "DeploySecondaryActiveDirectory",
       "apiVersion": "2016-02-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/VNetWithDNS"
+        "Microsoft.Resources/deployments/VNetWithDNS",
+        "Microsoft.Resources/deployments/DeployPrimaryActiveDirectory"
       ],
       "properties": {
         "mode": "Incremental",
@@ -141,7 +142,7 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "domainName":{
+          "domainName": {
             "value": "[parameters('domainName')]"
           },
           "DomainJoinscriptUrl": {
@@ -155,10 +156,43 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
+      "name": "DeployRemoteActiveDirectory",
+      "apiVersion": "2016-02-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/VNetWithDNS",
+        "Microsoft.Resources/deployments/DeploySecondaryActiveDirectory"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/labs-11-14/rdcvm-server.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUserName": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "domainName": {
+            "value": "[parameters('domainName')]"
+          },
+          "DomainJoinscriptUrl": {
+            "value": "[parameters('DomainJoinscriptUrl')]"
+          },
+          "DomainJoinedVMName": {
+            "value": "[parameters('DomainJoinedRDCVMName')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
       "name": "VNetWithDNS",
       "apiVersion": "2016-02-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DeployActiveDirectory"
+        "Microsoft.Resources/deployments/DeployPrimaryActiveDirectory"
       ],
       "properties": {
         "mode": "Incremental",

@@ -72,7 +72,7 @@
     "RDCVMSubnetRef": "[concat(variables('RDCVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "RDCVMStorageAccountContainerName": "vhds",
     "RDCVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "RDCVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "RDCVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','RDCVMdataDisk1.vhd')]",
     "RDCVM-IPName": "RDCVM-IP"
   },
   "resources": [
@@ -156,7 +156,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "RDCVMdataDisk1",
               "diskSizeGB": "1023",
               "lun": 0,
               "vhd": { "uri": "[variables('RDCVMDISK1')]" },

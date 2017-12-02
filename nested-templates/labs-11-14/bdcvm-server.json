@@ -72,7 +72,7 @@
     "BDCVMSubnetRef": "[concat(variables('BDCVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "BDCVMStorageAccountContainerName": "vhds",
     "BDCVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "BDCVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
+    "BDCVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','BDCVMdataDisk1.vhd')]",
     "BDCVM-IPName": "BDCVM-IP"
   },
   "resources": [
@@ -156,7 +156,7 @@
           },
           "dataDisks": [
             {
-              "name": "datadisk1",
+              "name": "BDCVMdataDisk1",
               "diskSizeGB": "1023",
               "lun": 0,
               "vhd": { "uri": "[variables('BDCVMDISK1')]" },
