@@ -1,0 +1,211 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmstorageType": {
+      "type": "string",
+      "defaultValue": "Premium_LRS",
+      "allowedValues": [
+        "Premium_LRS"
+      ]
+    },
+    "PDCVMName": {
+      "type": "string",
+      "defaultValue": "PDCVM",
+      "minLength": 1
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "demouser",
+      "metadata": {
+        "description": "The name of the administrator account of the new VM and domain"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "defaultValue": "demo@pass123",
+      "metadata": {
+        "description": "The password for the administrator account of the new VM and domain"
+      }
+    },
+    "domainName": {
+      "type": "string",
+      "defaultValue": "opsaaddemo.local",
+      "metadata": {
+        "description": "The FQDN of the Active Directory Domain to be created"
+      }
+    },
+    "ADInstallscriptUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Script to execute to install Active Directory"
+      }
+    },
+    "PDCVMWindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2016-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "2016-Datacenter"
+      ]
+    }
+  },
+  "variables": {
+    "VNETNAME": "OPSTrainingVNET",
+    "DNSIP": "10.0.1.4",
+    "OPSTrainingVNETPrefix": "10.0.0.0/16",
+    "OPSTrainingVNETSubnet1Name": "Apps",
+    "OPSTrainingVNETSubnet1Prefix": "10.0.0.0/24",
+    "OPSTrainingVNETSubnet2Name": "Identity",
+    "OPSTrainingVNETSubnet2Prefix": "10.0.1.0/24",
+    "vmstorageName": "[concat('adstorage', uniqueString(resourceGroup().id))]",
+    "PDCVMImagePublisher": "MicrosoftWindowsServer",
+    "PDCVMImageOffer": "WindowsServer",
+    "PDCVMOSDiskName": "PDCVMOSDisk",
+    "PDCVMVmSize": "Standard_DS1_v2",
+    "PDCVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
+    "PDCVMSubnetRef": "[concat(variables('PDCVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet2Name'))]",
+    "PDCVMStorageAccountContainerName": "vhds",
+    "PDCVMNicName": "[concat(parameters('PDCVMName'), 'NetworkInterface')]",
+    "InstallADScriptFolder": "CustomScripts",
+    "InstallADScriptFileName": "InstallAD.ps1",
+    "scriptFolder": ".",
+    "VM1scriptFileName": "deploy-ad.ps1",
+    "VM1scriptParameters": "[concat(' -domain ', parameters('domainName'), ' -password ', parameters('adminPassword'))]",
+    "DomainJoinscriptFileName": "domain-join.ps1",
+    "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
+    "PDCVMipName": "PDCVMip"
+  },
+  "resources": [
+    {
+      "name": "[variables('vmstorageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('vmstorageType')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "vmstorage"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "[variables('PDCVMNicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
+      ],
+      "tags": {
+        "displayName": "PDCVMNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('PDCVMSubnetRef')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('PDCVMipName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[parameters('PDCVMName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', variables('PDCVMNicName'))]"
+      ],
+      "tags": {
+        "displayName": "PDCVM"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[variables('PDCVMVmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('PDCVMName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('PDCVMImagePublisher')]",
+            "offer": "[variables('PDCVMImageOffer')]",
+            "sku": "[parameters('PDCVMWindowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "PDCVMOSDisk",
+            "vhd": {
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('PDCVMStorageAccountContainerName'), '/', variables('PDCVMOSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('PDCVMNicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "name": "InstallAD",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', parameters('PDCVMName'))]"
+          ],
+          "tags": {
+            "displayName": "InstallAD"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('ADInstallscriptUrl'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('VM1scriptFileName'), ' ', variables('VM1scriptParameters'))]"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "[variables('PDCVMipName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "PDCVMip"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
+      }
+    }
+  ],
+  "outputs": {}
+}
