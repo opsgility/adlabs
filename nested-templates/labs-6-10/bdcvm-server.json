@@ -25,12 +25,18 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsaaddemo.local",
+      "defaultValue": "opsdemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
     },
     "DomainJoinscriptUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "script to execute"
+      }
+    },
+    "AddDomainControllerscriptUrl": {
       "type": "string",
       "metadata": {
         "description": "script to execute"
@@ -64,6 +70,8 @@
     "scriptFolder": ".",
     "DomainJoinscriptFileName": "domain-join.ps1",
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
+    "DomainControllerFileName": "deploy-bdc.ps1",
+    "DomainControllerParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "BDCVMImagePublisher": "MicrosoftWindowsServer",
     "BDCVMImageOffer": "WindowsServer",
     "BDCVMOSDiskName": "BDCVMOSDisk",
@@ -194,6 +202,30 @@
                 "[concat(parameters('DomainJoinscriptUrl'))]"
               ],
               "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('DomainJoinscriptFileName'), ' ', variables('DomainJoinscriptParameters'))]"
+            }
+          }
+        },
+        {
+          "name": "PromoteToDomainController",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2016-03-30",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('DomainJoinedVMName'),'/extensions/DomainJoin')]"
+          ],
+          "tags": {
+            "displayName": "PromoteToDomainController"
+          },
+          "properties": {
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.4",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "fileUris": [
+                "[concat(parameters('AddDomainControllerscriptUrl'))]"
+              ],
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('DomainControllerFileName'), ' ', variables('DomainControllerParameters'))]"
             }
           }
         }
