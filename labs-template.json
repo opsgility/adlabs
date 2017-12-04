@@ -42,6 +42,13 @@
         "description": "script to execute"
       }
     },
+    "AddDomainControllerscriptUrl": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/opsgility/adlabs/master/script-extensions/deploy-bdc.ps1",
+      "metadata": {
+        "description": "script to execute"
+      }
+    },
     "DomainJoinedBDCVMName": {
       "type": "string",
       "defaultValue": "BDCVM",

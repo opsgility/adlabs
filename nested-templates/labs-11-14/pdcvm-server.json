@@ -30,7 +30,7 @@
     },
     "domainName": {
       "type": "string",
-      "defaultValue": "opsaaddemo.local",
+      "defaultValue": "opsdemo.local",
       "metadata": {
         "description": "The FQDN of the Active Directory Domain to be created"
       }
