@@ -211,6 +211,7 @@
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', parameters('DomainJoinedVMName'))]",
             "[concat('Microsoft.Compute/virtualMachines/', parameters('DomainJoinedVMName'),'/extensions/DomainJoin')]"
           ],
           "tags": {
