@@ -137,6 +137,9 @@
           },
           "DomainJoinedVMName": {
             "value": "[parameters('DomainJoinedBDCVMName')]"
+          },
+          "AddDomainControllerscriptUrl": {
+            "value": "[parameters('AddDomainControllerscriptUrl')]"
           }
         }
       }
