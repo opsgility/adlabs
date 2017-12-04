@@ -182,37 +182,12 @@
       },
       "resources": [
         {
-          "name": "DomainJoin",
-          "type": "extensions",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2016-03-30",
-          "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', parameters('DomainJoinedVMName'))]"
-          ],
-          "tags": {
-            "displayName": "DomainJoin"
-          },
-          "properties": {
-            "publisher": "Microsoft.Compute",
-            "type": "CustomScriptExtension",
-            "typeHandlerVersion": "1.4",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "fileUris": [
-                "[concat(parameters('DomainJoinscriptUrl'))]"
-              ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('DomainJoinscriptFileName'), ' ', variables('DomainJoinscriptParameters'))]"
-            }
-          }
-        },
-        {
           "name": "PromoteToDomainController",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
           "dependsOn": [
-            "[resourceId('Microsoft.Compute/virtualMachines', parameters('DomainJoinedVMName'))]",
-            "[concat('Microsoft.Compute/virtualMachines/', parameters('DomainJoinedVMName'),'/extensions/DomainJoin')]"
+            "[resourceId('Microsoft.Compute/virtualMachines', parameters('DomainJoinedVMName'))]"
           ],
           "tags": {
             "displayName": "PromoteToDomainController"

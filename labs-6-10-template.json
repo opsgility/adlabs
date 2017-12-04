@@ -155,7 +155,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/labs-11-14/rdcvm-server.json",
+          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/labs-6-10/rdcvm-server.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -188,7 +188,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/labs-11-14/clientvm-client.json",
+          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/labs-6-10/clientvm-client.json",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
