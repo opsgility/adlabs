@@ -5,6 +5,11 @@
       "taskName": "task-labs-11-14",
       "appliesTo": "nested-templates/labs-11-14/",
       "type": "launch"
+    },
+    {
+      "taskName": "task-dsc-powershell",
+      "appliesTo": "dsc-powershell/",
+      "type": "launch"
     }
   ]
 }
