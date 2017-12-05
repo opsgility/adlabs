@@ -28,19 +28,6 @@
         "description": "The password for the administrator account of the new VM and domain"
       }
     },
-    "domainName": {
-      "type": "string",
-      "defaultValue": "opsaaddemo.local",
-      "metadata": {
-        "description": "The FQDN of the Active Directory Domain to be created"
-      }
-    },
-    "ADInstallscriptUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "Script to execute to install Active Directory"
-      }
-    },
     "PDCVMWindowsOSVersion": {
       "type": "string",
       "defaultValue": "2016-Datacenter",
@@ -69,13 +56,6 @@
     "PDCVMSubnetRef": "[concat(variables('PDCVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet2Name'))]",
     "PDCVMStorageAccountContainerName": "vhds",
     "PDCVMNicName": "[concat(parameters('PDCVMName'), 'NetworkInterface')]",
-    "InstallADScriptFolder": "CustomScripts",
-    "InstallADScriptFileName": "InstallAD.ps1",
-    "scriptFolder": ".",
-    "VM1scriptFileName": "deploy-ad.ps1",
-    "VM1scriptParameters": "[concat(' -domain ', parameters('domainName'), ' -password ', parameters('adminPassword'))]",
-    "DomainJoinscriptFileName": "domain-join.ps1",
-    "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "PDCVMipName": "PDCVMip"
   },
   "resources": [

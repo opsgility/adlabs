@@ -9,6 +9,11 @@
         "Premium_LRS"
       ]
     },
+    "BDCVMName": {
+      "type": "string",
+      "defaultValue": "BDCVM",
+      "minLength": 1
+    },
     "adminUsername": {
       "type": "string",
       "defaultValue": "demouser",
@@ -22,24 +27,6 @@
       "metadata": {
         "description": "The password for the administrator account of the new VM and domain"
       }
-    },
-    "domainName": {
-      "type": "string",
-      "defaultValue": "opsaaddemo.local",
-      "metadata": {
-        "description": "The FQDN of the Active Directory Domain to be created"
-      }
-    },
-    "DomainJoinscriptUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "script to execute"
-      }
-    },
-    "DomainJoinedVMName": {
-      "type": "string",
-      "defaultValue": "BDCVM",
-      "minLength": 1
     },
     "DomainJoinedVMWindowsOSVersion": {
       "type": "string",
@@ -61,9 +48,6 @@
     "OPSTrainingVNETSubnet2Name": "Identity",
     "OPSTrainingVNETSubnet2Prefix": "10.0.1.0/24",
     "vmstorageName": "[concat('msstorage', uniqueString(resourceGroup().id))]",
-    "scriptFolder": ".",
-    "DomainJoinscriptFileName": "domain-join.ps1",
-    "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "BDCVMImagePublisher": "MicrosoftWindowsServer",
     "BDCVMImageOffer": "WindowsServer",
     "BDCVMOSDiskName": "BDCVMOSDisk",
@@ -71,7 +55,7 @@
     "BDCVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
     "BDCVMSubnetRef": "[concat(variables('BDCVMVnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "BDCVMStorageAccountContainerName": "vhds",
-    "BDCVMNicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
+    "BDCVMNicName": "[concat(parameters('BDCVMName'), 'NetworkInterface')]",
     "BDCVMDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','BDCVMdataDisk1.vhd')]",
     "BDCVM-IPName": "BDCVM-IP"
   },
@@ -119,7 +103,7 @@
       }
     },
     {
-      "name": "[parameters('DomainJoinedVMName')]",
+      "name": "[parameters('BDCVMName')]",
       "type": "Microsoft.Compute/virtualMachines",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
@@ -135,7 +119,7 @@
           "vmSize": "[variables('BDCVMVmSize')]"
         },
         "osProfile": {
-          "computerName": "[parameters('DomainJoinedVMName')]",
+          "computerName": "[parameters('BDCVMName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
