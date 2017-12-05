@@ -180,9 +180,10 @@
           ]
         }
       },
+
       "resources": [
         {
-          "name": "PromoteToDomainController",
+          "name": "DomainJoin",
           "type": "extensions",
           "location": "[resourceGroup().location]",
           "apiVersion": "2016-03-30",
@@ -190,7 +191,7 @@
             "[resourceId('Microsoft.Compute/virtualMachines', parameters('DomainJoinedVMName'))]"
           ],
           "tags": {
-            "displayName": "PromoteToDomainController"
+            "displayName": "DomainJoin"
           },
           "properties": {
             "publisher": "Microsoft.Compute",
@@ -199,9 +200,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "fileUris": [
-                "[concat(parameters('AddDomainControllerscriptUrl'))]"
+                "[concat(parameters('DomainJoinscriptUrl'))]"
               ],
-              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('DomainControllerFileName'), ' ', variables('DomainControllerParameters'))]"
+              "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('DomainJoinscriptFileName'), ' ', variables('DomainJoinscriptParameters'))]"
             }
           }
         }
