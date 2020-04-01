@@ -49,7 +49,7 @@
       ]
     }
   },
-  
+
   "variables": {
     "VNETNAME": "OPSTrainingVNET",
     "DNSIP": "10.0.1.4",
@@ -70,7 +70,6 @@
     "MABSServerVM1SubnetRef": "[concat(variables('MABSServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "MABSServerVM1StorageAccountContainerName": "vhds",
     "MABSServerVM1NicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
-    "MABSDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
     "MABSServerVm1-IPName": "[concat(parameters('DomainJoinedVMName'), '-IP')]"
   },
   "resources": [
@@ -126,7 +125,7 @@
         "[resourceId('Microsoft.Network/networkInterfaces', variables('MABSServerVM1NicName'))]"
       ],
       "tags": {
-        "displayName": "MABSServerVM1"
+        "displayName": "[parameters('DomainJoinedVMName')]"
       },
       "properties": {
         "hardwareProfile": {
@@ -145,22 +144,13 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "MABSServerVM1OSDisk",
+            "name": "[contact(parameters('DomainJoinedVMName'), '-OSDisk')]",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('MABSServerVM1StorageAccountContainerName'), '/', variables('MABSServerVM1OSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('MABSServerVM1StorageAccountContainerName'), '/', parameters('DomainJoinedVMName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "name": "datadisk1",
-              "diskSizeGB": "1023",
-              "lun": 0,
-              "vhd": { "uri": "[variables('MABSDISK1')]" },
-              "createOption": "Empty"
-            }
-          ]
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
