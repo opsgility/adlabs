@@ -144,7 +144,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[contact(parameters('DomainJoinedVMName'), '-OSDisk')]",
+            "name": "[concat(parameters('DomainJoinedVMName'), '-OSDisk')]",
             "vhd": {
               "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vmstorageName')), '2016-01-01').primaryEndpoints.blob, variables('MABSServerVM1StorageAccountContainerName'), '/', parameters('DomainJoinedVMName'), '.vhd')]"
             },
