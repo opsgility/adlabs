@@ -63,14 +63,14 @@
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "MABSServerVM1ImagePublisher": "MicrosoftWindowsDesktop",
     "MABSServerVM1ImageOffer": "Windows-10",
-    "MABSServerVM1OSDiskName": "[concat(variables('DomainJoinedVMName'), '-OSDisk')]",
+    "MABSServerVM1OSDiskName": "[concat(parameters('DomainJoinedVMName'), '-OSDisk')]",
     "MABSServerVM1VmSize": "Standard_DS2_v2",
     "MABSServerVM1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
     "MABSServerVM1SubnetRef": "[concat(variables('MABSServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "MABSServerVM1StorageAccountContainerName": "vhds",
     "MABSServerVM1NicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
     "MABSDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
-    "MABSServerVm1-IPName": "[concat(variables('DomainJoinedVMName'), '-IP')]"
+    "MABSServerVm1-IPName": "[concat(parameters('DomainJoinedVMName'), '-IP')]"
   },
   "resources": [
     {
