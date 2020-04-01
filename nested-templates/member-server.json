@@ -63,7 +63,7 @@
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
     "MABSServerVM1ImagePublisher": "MicrosoftWindowsDesktop",
     "MABSServerVM1ImageOffer": "Windows-10",
-    "MABSServerVM1OSDiskName": "[concat(variables('DomainJoinedVMName'), '-OSDisk']",
+    "MABSServerVM1OSDiskName": "[concat(variables('DomainJoinedVMName'), '-OSDisk')]",
     "MABSServerVM1VmSize": "Standard_DS2_v2",
     "MABSServerVM1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
     "MABSServerVM1SubnetRef": "[concat(variables('MABSServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
