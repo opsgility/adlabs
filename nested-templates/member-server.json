@@ -43,12 +43,9 @@
     },
     "DomainJoinedVMWindowsOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "rs5-enterprise-standard",
       "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-        "2016-Datacenter"
+        "rs5-enterprise-standard"
       ]
     }
   },
@@ -64,16 +61,16 @@
     "scriptFolder": ".",
     "DomainJoinscriptFileName": "domain-join.ps1",
     "DomainJoinscriptParameters": "[concat(' -domain ', parameters('domainName'), ' -user ', parameters('adminUsername'), ' -password ', parameters('adminPassword'))]",
-    "MABSServerVM1ImagePublisher": "MicrosoftWindowsServer",
-    "MABSServerVM1ImageOffer": "WindowsServer",
-    "MABSServerVM1OSDiskName": "MABSServerVM1OSDisk",
+    "MABSServerVM1ImagePublisher": "MicrosoftWindowsDesktop",
+    "MABSServerVM1ImageOffer": "Windows-10",
+    "MABSServerVM1OSDiskName": "[concat(variables('DomainJoinedVMName'), '-OSDisk']",
     "MABSServerVM1VmSize": "Standard_DS2_v2",
     "MABSServerVM1VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'OPSTrainingVNET')]",
     "MABSServerVM1SubnetRef": "[concat(variables('MABSServerVM1VnetID'), '/subnets/', variables('OPSTrainingVNETSubnet1Name'))]",
     "MABSServerVM1StorageAccountContainerName": "vhds",
     "MABSServerVM1NicName": "[concat(parameters('DomainJoinedVMName'), 'NetworkInterface')]",
     "MABSDISK1": "[concat('http://',variables('vmstorageName'),'.blob.core.windows.net/','vhds','/','dataDisk1.vhd')]",
-    "MABSServerVm1-IPName": "MABSServerVm1-IP"
+    "MABSServerVm1-IPName": "[concat(variables('DomainJoinedVMName'), '-IP']"
   },
   "resources": [
     {

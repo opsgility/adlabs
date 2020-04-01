@@ -43,12 +43,9 @@
     },
     "ADVMWindowsOSVersion": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
+      "defaultValue": "2019-Datacenter",
       "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-	      "2016-Datacenter"
+        "2019-Datacenter"
       ]
     }
   },

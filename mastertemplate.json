@@ -1,143 +1,180 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "adminUsername": {
-      "type": "string",
-      "defaultValue": "demouser",
-      "metadata": {
-        "description": "The name of the administrator account of the new VM and domain"
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "defaultValue": "demo@pass123",
-      "metadata": {
-        "description": "The password for the administrator account of the new VM and domain"
-      }
-    },
-    "ADVMName": {
-      "type": "string",
-      "defaultValue": "OPSADSRV",
-      "minLength": 1
-    },
-    "domainName": {
-      "type": "string",
-      "defaultValue": "opsaaddemo.local",
-      "metadata": {
-        "description": "The FQDN of the Active Directory Domain to be created"
-      }
-    },
-    "ADInstallscriptUrl": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/opsgility/adlabs/master/script-extensions/deploy-ad.ps1",
-      "metadata": {
-        "description": "Script to execute to install Active Directory"
-      }
-    },
-    "DomainJoinscriptUrl": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/opsgility/adlabs/master/script-extensions/domain-join.ps1",
-      "metadata": {
-        "description": "script to execute"
-      }
-    },
-    "DomainJoinedVMName": {
-      "type": "string",
-      "defaultValue": "MSVM1",
-      "minLength": 1
-    }
-  },
-  "variables": {},
-  "resources": [
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "DeployActiveDirectory",
-      "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/VNET"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/active-directory.json",
-          "contentVersion": "1.0.0.0"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "demouser",
+            "metadata": {
+                "description": "The name of the administrator account of the new VM and domain"
+            }
         },
-        "parameters": {
-          "adminUserName": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "domainName":{
-            "value": "[parameters('domainName')]"
-          },
-          "ADInstallscriptUrl":{
-            "value": "[parameters('ADInstallscriptUrl')]"
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "VNET",
-      "apiVersion": "2016-02-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/vnet.json",
-          "contentVersion": "1.0.0.0"
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "DeployVirtualMachines",
-      "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/VNetWithDNS"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/member-server.json",
-          "contentVersion": "1.0.0.0"
+        "adminPassword": {
+            "type": "securestring",
+            "defaultValue": "Pa55w.rd",
+            "metadata": {
+                "description": "The password for the administrator account of the new VM and domain"
+            }
         },
-        "parameters": {
-          "adminUserName": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "domainName":{
-            "value": "[parameters('domainName')]"
-          },
-          "DomainJoinscriptUrl": {
-            "value": "[parameters('DomainJoinscriptUrl')]"
-          },
-          "DomainJoinedVMName": {
-            "value": "[parameters('DomainJoinedVMName')]"
-          }
+        "ADVMName": {
+            "type": "string",
+            "defaultValue": "LON-HOST1",
+            "minLength": 1
+        },
+        "domainName": {
+            "type": "string",
+            "defaultValue": "adatum.com",
+            "metadata": {
+                "description": "The FQDN of the Active Directory Domain to be created"
+            }
+        },
+        "ADInstallscriptUrl": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/opsgility/adlabs/master/script-extensions/deploy-ad.ps1",
+            "metadata": {
+                "description": "Script to execute to install Active Directory"
+            }
+        },
+        "DomainJoinscriptUrl": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/opsgility/adlabs/master/script-extensions/domain-join.ps1",
+            "metadata": {
+                "description": "script to execute"
+            }
+        },
+        "DomainJoinedVMName1": {
+            "type": "string",
+            "defaultValue": "LON-CLI1",
+            "minLength": 1
+        },
+        "DomainJoinedVMName2": {
+            "type": "string",
+            "defaultValue": "LON-CLI2",
+            "minLength": 1
         }
-      }
     },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "name": "VNetWithDNS",
-      "apiVersion": "2016-02-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/DeployActiveDirectory"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/vnet-with-dns.json",
-          "contentVersion": "1.0.0.0"
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "DeployActiveDirectory",
+            "apiVersion": "2016-02-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/VNET"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/active-directory.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUserName": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "ADInstallscriptUrl": {
+                        "value": "[parameters('ADInstallscriptUrl')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "VNET",
+            "apiVersion": "2016-02-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/vnet.json",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "DeployVirtualMachine1",
+            "apiVersion": "2016-02-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/VNetWithDNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/member-server.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUserName": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainJoinscriptUrl": {
+                        "value": "[parameters('DomainJoinscriptUrl')]"
+                    },
+                    "DomainJoinedVMName": {
+                        "value": "[parameters('DomainJoinedVMName1')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "DeployVirtualMachine2",
+            "apiVersion": "2016-02-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/VNetWithDNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/member-server.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "adminUserName": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "domainName": {
+                        "value": "[parameters('domainName')]"
+                    },
+                    "DomainJoinscriptUrl": {
+                        "value": "[parameters('DomainJoinscriptUrl')]"
+                    },
+                    "DomainJoinedVMName": {
+                        "value": "[parameters('DomainJoinedVMName2')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "name": "VNetWithDNS",
+            "apiVersion": "2016-02-01",
+            "dependsOn": [
+                "Microsoft.Resources/deployments/DeployActiveDirectory"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/opsgility/adlabs/master/nested-templates/vnet-with-dns.json",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
         }
-      }
-    }
-  ],
-  "outputs": {}
+    ],
+    "outputs": {}
 }
